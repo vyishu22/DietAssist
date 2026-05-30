@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Recommendations - DietAssist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-logo">DietAssist</div>
+            <div class="navbar-menu">
+                <button onclick="window.location.href='/pages/health-information.html'">Edit Health Info</button>
+                <button onclick="regeneratePlan()" class="btn btn-outline">Regenerate Diet Plan</button>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </nav>
+
+        <div class="content-wrapper">
+            {% if critical_alert %}
+            <div class="alert alert-danger" style="margin-bottom:16px;">
+                <div class="alert-title">⚠️ Critical Alert</div>
+                <div>{{ critical_alert }}</div>
+            </div>
+            {% endif %}
+            <div class="recommendations-container">
+                <div class="recommendations-main">
+                    <div class="recommendation-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <span>🍽️ Food Recommendations</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content section-scrollable" data-expanded="true">
+                            <div class="allergy-message-list">
+                                {% for msg in allergy_messages %}
+                                <div class="allergy-message-item">{{ msg }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="meal-category">
+                                <h4>🌅 Breakfast</h4>
+                                {% for item in food_morning %}
+                                <div class="recommendation-item">
+                                    <div class="recommendation-item-name">{{ item.name }}</div>
+                                    <div class="recommendation-item-reason">{{ item.reason }}</div>
+                                    {% if item.estimated_cost %}
+                                    <div class="recommendation-item-cost">Estimated Cost: {{ item.estimated_cost }}</div>
+                                    {% endif %}
+                                </div>
+                                {% else %}
+                                <p style="color:#777">No recommendations available</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="meal-category">
+                                <h4>☀️ Lunch</h4>
+                                {% for item in food_afternoon %}
+                                <div class="recommendation-item">
+                                    <div class="recommendation-item-name">{{ item.name }}</div>
+                                    <div class="recommendation-item-reason">{{ item.reason }}</div>
+                                    {% if item.estimated_cost %}
+                                    <div class="recommendation-item-cost">Estimated Cost: {{ item.estimated_cost }}</div>
+                                    {% endif %}
+                                </div>
+                                {% else %}
+                                <p style="color:#777">No recommendations available</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="meal-category">
+                                <h4>🌙 Dinner</h4>
+                                {% for item in food_evening %}
+                                <div class="recommendation-item">
+                                    <div class="recommendation-item-name">{{ item.name }}</div>
+                                    <div class="recommendation-item-reason">{{ item.reason }}</div>
+                                    {% if item.estimated_cost %}
+                                    <div class="recommendation-item-cost">Estimated Cost: {{ item.estimated_cost }}</div>
+                                    {% endif %}
+                                </div>
+                                {% else %}
+                                <p style="color:#777">No recommendations available</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="meal-category">
+                                <h4>🚫 Foods to Avoid</h4>
+                                {% for item in foods_to_avoid %}
+                                <div class="recommendation-item avoid-item">
+                                    <div class="recommendation-item-name">{{ item.name }}</div>
+                                    <div class="recommendation-item-reason">{{ item.reason }}</div>
+                                </div>
+                                {% else %}
+                                <p style="color:#777">No foods to avoid</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="alternatives-section">
+                                <p class="alternatives-message">🔁 Breakfast Alternatives</p>
+                                <button id="breakfastAltBtn" class="btn btn-outline btn-sm" type="button" onclick="toggleBreakfastAlternatives()">
+                                    <span id="breakfastAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="breakfastAlternatives" class="alternatives-content" style="display:none; margin-top:12px;"></div>
+
+                                <p class="alternatives-message">🔁 Lunch Alternatives</p>
+                                <button id="lunchAltBtn" class="btn btn-outline btn-sm" type="button" onclick="toggleLunchAlternatives()">
+                                    <span id="lunchAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="lunchAlternatives" class="alternatives-content" style="display:none; margin-top:12px;"></div>
+
+                                <p class="alternatives-message">🔁 Dinner Alternatives</p>
+                                <button id="dinnerAltBtn" class="btn btn-outline btn-sm" type="button" onclick="toggleDinnerAlternatives()">
+                                    <span id="dinnerAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="dinnerAlternatives" class="alternatives-content" style="display:none; margin-top:12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <span>🥤 Drink Recommendations</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content section-scrollable" data-expanded="true">
+                            {% for item in drinks %}
+                            <div class="recommendation-item">
+                                <div class="recommendation-item-name">{{ item.name }}</div>
+                                <div class="recommendation-item-reason">{{ item.reason }}</div>
+                                {% if item.estimated_cost %}
+                                <div class="recommendation-item-cost">Estimated Cost: {{ item.estimated_cost }}</div>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <p style="color:#777">No recommendations available</p>
+                            {% endfor %}
+
+                            <div class="alternatives-section">
+                                <p class="alternatives-message">💡 Cheaper healthy drink alternatives are available.</p>
+                                <button id="drinksAltBtn" class="btn btn-outline btn-sm" type="button" onclick="toggleDrinksAlternatives()">
+                                    <span id="drinksAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="drinksAlternatives" class="alternatives-content" style="display:none; margin-top:12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <span>🍿 Snack Recommendations</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content section-scrollable" data-expanded="true">
+                            {% for item in snacks %}
+                            <div class="recommendation-item">
+                                <div class="recommendation-item-name">{{ item.name }}</div>
+                                <div class="recommendation-item-reason">{{ item.reason }}</div>
+                                {% if item.estimated_cost %}
+                                <div class="recommendation-item-cost">Estimated Cost: {{ item.estimated_cost }}</div>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <p style="color:#777">No recommendations available</p>
+                            {% endfor %}
+
+                            <div class="alternatives-section">
+                                <p class="alternatives-message">🔁 Snack Alternatives</p>
+                                <button id="snacksAltBtn" class="btn btn-outline btn-sm" type="button" onclick="toggleSnacksAlternatives()">
+                                    <span id="snacksAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="snacksAlternatives" class="alternatives-content" style="display:none; margin-top:12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-section">
+                        <div class="section-content feedback-cta" data-expanded="true">
+                            <p>Have feedback? We'd love to hear from you!</p>
+                            <button onclick="goToFeedback()" class="btn btn-primary btn-lg" type="button">
+                                📝 Go to Feedback Page
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="sidebar-card">
+                        <h3>💡 Healthy Tips for Today</h3>
+                        {% for tip in tips %}
+                        <div class="tip-item"><span class="tip-icon">{{ tip.icon }}</span>{{ tip.text }}</div>
+                        {% else %}
+                        <p style="color:#777">No tips available</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>📊 Your Health Summary</h3>
+                        <div class="patient-info-item"><span>Last Updated:</span> <strong>{{ recommendation_last_updated }}</strong></div>
+                        <div class="patient-info-item"><span>Health Score:</span> <strong>{{ health_score_stars }} ({{ health_score }}/10)</strong></div>
+                        {% if health_conditions.diabetes %}
+                        <div class="patient-info-item"><span>Glucose:</span> <strong>{{ health_conditions.diabetes }} mg/dL</strong></div>
+                        {% endif %}
+                        {% if health_conditions.blood_pressure %}
+                        <div class="patient-info-item"><span>BP:</span> <strong>{{ health_conditions.blood_pressure }} mmHg</strong></div>
+                        {% endif %}
+                        {% if health_conditions.cholesterol %}
+                        <div class="patient-info-item"><span>Cholesterol:</span> <strong>{{ health_conditions.cholesterol }} mg/dL</strong></div>
+                        {% endif %}
+                        {% if health_conditions.obesity_bmi %}
+                        <div class="patient-info-item"><span>BMI:</span> <strong>{{ health_conditions.obesity_bmi }}</strong></div>
+                        {% endif %}
+                        {% if allergies %}
+                        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color)"><strong>Allergies:</strong> {{ allergies | join(', ') }}</div>
+                        {% endif %}
+                        <div class="patient-info-item"><span>Preference:</span><strong>{{ food_preference }}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bootstrapToken = "{{ token }}";
+        const seedFoodName = "{{ (food_morning[0].name if food_morning else '') | e }}";
+        const seedFoodCost = "{{ (food_morning[0].estimated_cost if food_morning else '') | e }}";
+        const seedLunchName = "{{ (food_afternoon[0].name if food_afternoon else '') | e }}";
+        const seedLunchCost = "{{ (food_afternoon[0].estimated_cost if food_afternoon else '') | e }}";
+        const seedDinnerName = "{{ (food_evening[0].name if food_evening else '') | e }}";
+        const seedDinnerCost = "{{ (food_evening[0].estimated_cost if food_evening else '') | e }}";
+        const seedDrinkName = "{{ (drinks[0].name if drinks else '') | e }}";
+        const seedDrinkCost = "{{ (drinks[0].estimated_cost if drinks else '') | e }}";
+        const seedSnackName = "{{ (snacks[0].name if snacks else '') | e }}";
+        const seedSnackCost = "{{ (snacks[0].estimated_cost if snacks else '') | e }}";
+        if (bootstrapToken) {
+            localStorage.setItem('token', bootstrapToken);
+            localStorage.setItem('userType', 'patient');
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+
+        function toggleSection(headerElement) {
+            const content = headerElement.parentElement.querySelector('.section-content');
+            const icon = headerElement.querySelector('.expand-icon');
+            const isExpanded = content.getAttribute('data-expanded') !== 'false';
+
+            if (isExpanded) {
+                content.classList.add('collapsed');
+                content.setAttribute('data-expanded', 'false');
+                headerElement.classList.add('collapsed');
+            } else {
+                content.classList.remove('collapsed');
+                content.setAttribute('data-expanded', 'true');
+                headerElement.classList.remove('collapsed');
+            }
+
+            icon.classList.toggle('rotated', content.getAttribute('data-expanded') === 'false');
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        function regeneratePlan() {
+            const token = localStorage.getItem('token') || bootstrapToken;
+            if (!token) {
+                window.location.href = '/';
+                return;
+            }
+            window.location.href = `/recommendations?token=${encodeURIComponent(token)}&regenerate=1`;
+        }
+
+        function goToFeedback() {
+            window.location.href = '/pages/feedback.html';
+        }
+
+        async function toggleAlternativesFor(category, containerId, textId, fallbackName, fallbackCost) {
+            const container = document.getElementById(containerId);
+            const textEl = document.getElementById(textId);
+            const token = localStorage.getItem('token') || bootstrapToken;
+
+            if (!container || !textEl) return;
+
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                textEl.textContent = 'Show Alternatives';
+                return;
+            }
+
+            container.style.display = 'block';
+            textEl.textContent = 'Hide Alternatives';
+
+            if (container.getAttribute('data-loaded') === 'true') {
+                return;
+            }
+
+            container.innerHTML = '<p style="color:#777; font-style:italic;">Loading alternatives...</p>';
+
+            try {
+                const res = await fetch('/api/recommendations/alternatives', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        category,
+                        food_name: fallbackName,
+                        food_cost: fallbackCost
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    container.innerHTML = `<p style="color:#b42318;">Failed to load alternatives: ${data.error || 'Unknown error'}</p>`;
+                    return;
+                }
+
+                const items = Array.isArray(data.alternatives) ? data.alternatives : [];
+                if (items.length === 0) {
+                    container.innerHTML = '<p style="color:#777; font-style:italic;">No alternatives available.</p>';
+                    return;
+                }
+
+                container.innerHTML = items.map(item => `
+                    <div class="recommendation-item alternative-item">
+                        <div class="recommendation-item-name">${item.name || ''}</div>
+                        <div class="recommendation-item-reason">${item.reason || ''}</div>
+                        ${item.estimated_cost ? `<div class="recommendation-item-cost">Estimated Cost: ${item.estimated_cost}</div>` : ''}
+                    </div>
+                `).join('');
+                container.setAttribute('data-loaded', 'true');
+            } catch (err) {
+                container.innerHTML = `<p style="color:#b42318;">Error loading alternatives: ${err.message}</p>`;
+            }
+        }
+
+        function toggleBreakfastAlternatives() {
+            return toggleAlternativesFor(
+                'food',
+                'breakfastAlternatives',
+                'breakfastAltText',
+                seedFoodName || 'Paneer Tikka Wrap',
+                seedFoodCost || '₹140–₹220'
+            );
+        }
+
+        function toggleLunchAlternatives() {
+            return toggleAlternativesFor(
+                'food',
+                'lunchAlternatives',
+                'lunchAltText',
+                seedLunchName || 'Quinoa Salad Bowl',
+                seedLunchCost || '₹120–₹180'
+            );
+        }
+
+        function toggleDinnerAlternatives() {
+            return toggleAlternativesFor(
+                'food',
+                'dinnerAlternatives',
+                'dinnerAltText',
+                seedDinnerName || 'Baked Fish with Vegetables',
+                seedDinnerCost || '₹120–₹200'
+            );
+        }
+
+        function toggleDrinksAlternatives() {
+            return toggleAlternativesFor(
+                'drinks',
+                'drinksAlternatives',
+                'drinksAltText',
+                seedDrinkName || 'Packaged Protein Shake',
+                seedDrinkCost || '₹90–₹180'
+            );
+        }
+
+        function toggleSnacksAlternatives() {
+            return toggleAlternativesFor(
+                'snacks',
+                'snacksAlternatives',
+                'snacksAltText',
+                seedSnackName || 'Imported Granola Bar',
+                seedSnackCost || '₹80–₹160'
+            );
+        }
+    </script>
+</body>
+</html>

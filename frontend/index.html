@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DietAssist - Healthcare Diet Recommendation System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="landing-page">
+        <div class="landing-container">
+            <div class="landing-content">
+                <div class="logo-section">
+                    <h1 class="logo-text">DietAssist</h1>
+                    <p class="tagline">Your Personal Healthcare Diet Companion</p>
+                </div>
+                
+                <div class="intro-section">
+                    <p class="intro-text">Get personalized diet recommendations based on your health conditions and preferences</p>
+                </div>
+                
+                <div class="buttons-container">
+                    <button class="btn btn-primary" onclick="showPatientLogin()">Patient Login</button>
+                    <button class="btn btn-secondary" onclick="showPatientRegister()">Patient Register</button>
+                    <button class="btn btn-outline" onclick="showCaretakerLogin()">Caretaker Access</button>
+                </div>
+            </div>
+            
+            <div class="features-section">
+                <div class="feature-card">
+                    <div class="feature-icon">🏥</div>
+                    <h3>Health Tracking</h3>
+                    <p>Monitor your health conditions with our comprehensive tracking system</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🍎</div>
+                    <h3>Smart Recommendations</h3>
+                    <p>Get AI-powered diet recommendations tailored to your needs</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍⚕️</div>
+                    <h3>Professional Care</h3>
+                    <p>Share your data with doctors, nutritionists, and caregivers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Login Modal -->
+    <div id="patientLoginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Patient Login</h2>
+                <button class="close-btn" onclick="closeModal('patientLoginModal')">&times;</button>
+            </div>
+            <form id="patientLoginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p class="auth-switch">Don't have an account? <a href="#" onclick="switchModal('patientLoginModal', 'patientRegisterModal')">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Patient Register Modal -->
+    <div id="patientRegisterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Patient Registration</h2>
+                <button class="close-btn" onclick="closeModal('patientRegisterModal')">&times;</button>
+            </div>
+            <form id="patientRegisterForm" class="auth-form">
+                <div class="form-group">
+                    <label for="regName">Full Name</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regAge">Age</label>
+                    <input type="number" id="regAge" min="1" max="150" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required>
+                    <small>Minimum 6 characters</small>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+            </form>
+            <p class="auth-switch">Already have an account? <a href="#" onclick="switchModal('patientRegisterModal', 'patientLoginModal')">Login here</a></p>
+        </div>
+    </div>
+
+    <!-- Caretaker Login Modal -->
+    <div id="caretakerLoginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Caretaker Login</h2>
+                <button class="close-btn" onclick="closeModal('caretakerLoginModal')">&times;</button>
+            </div>
+            <form id="caretakerLoginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="caretakerLoginEmail">Email</label>
+                    <input type="email" id="caretakerLoginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="caretakerLoginPassword">Password</label>
+                    <input type="password" id="caretakerLoginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p class="auth-switch">Don't have an account? <a href="#" onclick="switchModal('caretakerLoginModal', 'caretakerRegisterModal')">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Caretaker Register Modal -->
+    <div id="caretakerRegisterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Caretaker Registration</h2>
+                <button class="close-btn" onclick="closeModal('caretakerRegisterModal')">&times;</button>
+            </div>
+            <form id="caretakerRegisterForm" class="auth-form">
+                <div class="form-group">
+                    <label for="caretakerRegName">Full Name</label>
+                    <input type="text" id="caretakerRegName" required>
+                </div>
+                <div class="form-group">
+                    <label for="caretakerRegEmail">Email</label>
+                    <input type="email" id="caretakerRegEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="caretakerRegRole">Role</label>
+                    <select id="caretakerRegRole" required>
+                        <option value="">Select Role</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Nutritionist">Nutritionist</option>
+                        <option value="Guardian">Guardian</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="caretakerRegPassword">Password</label>
+                    <input type="password" id="caretakerRegPassword" required>
+                    <small>Minimum 6 characters</small>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+            </form>
+            <p class="auth-switch">Already have an account? <a href="#" onclick="switchModal('caretakerRegisterModal', 'caretakerLoginModal')">Login here</a></p>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - DietAssist</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-logo">DietAssist</div>
+            <div class="navbar-menu">
+                <button onclick="history.back()" class="btn btn-outline">Back</button>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </nav>
+
+        <main class="content-wrapper">
+            <div class="feedback-card">
+                <h2>We value your feedback</h2>
+                <p>Tell us about your experience with the recommendations.</p>
+
+                <form id="feedbackForm" class="feedback-form">
+                    <div class="rating-row">
+                        <div id="ratingStars" class="rating-stars">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <input type="hidden" id="ratingValue" name="rating" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="feedbackComment">Comments (optional)</label>
+                        <textarea id="feedbackComment" name="comment" rows="5" placeholder="Share anything that would help us improve..."></textarea>
+                    </div>
+
+                    <div style="text-align:center; margin-top: 12px;">
+                        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/feedback.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - DietAssist</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="brand-icon">🏥</span>
+                DietAssist
+            </div>
+            <div class="navbar-menu">
+                <button onclick="backToDashboard()" class="nav-btn">← Back to Recommendations</button>
+                <button onclick="logout()" class="nav-btn logout-btn">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="feedback-container">
+        <div class="feedback-wrapper">
+            <!-- Header -->
+            <div class="feedback-header">
+                <h1>💬 Share Your Feedback</h1>
+                <p>Help us improve your personalized diet recommendations</p>
+            </div>
+
+            <!-- Alert Container -->
+            <div id="alertContainer" class="alert-container"></div>
+
+            <!-- Feedback Form -->
+            <div class="feedback-form-section">
+                <form id="feedbackForm" class="feedback-form">
+                    <!-- Star Rating -->
+                    <div class="form-group">
+                        <label class="form-label">How satisfied are you with the recommendations?</label>
+                        <div class="star-rating" id="ratingStars">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <div class="rating-labels">
+                            <span class="rating-label" id="ratingLabel">Select a rating</span>
+                            <span class="rating-value" id="ratingValue"></span>
+                        </div>
+                    </div>
+
+                    <!-- Comment -->
+                    <div class="form-group">
+                        <label class="form-label" for="feedbackComment">Comments (optional)</label>
+                        <textarea 
+                            id="feedbackComment" 
+                            class="form-textarea" 
+                            placeholder="Share your thoughts... What did you like? What could be improved?">
+                        </textarea>
+                        <span class="char-count">0 / 500 characters</span>
+                    </div>
+
+                    <!-- Recommendation Type -->
+                    <div class="form-group">
+                        <label class="form-label">Which recommendation was most helpful?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="radio" name="recommendation_type" value="food" checked>
+                                <span>Food Recommendations</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="recommendation_type" value="drinks">
+                                <span>Drink Recommendations</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="recommendation_type" value="snacks">
+                                <span>Snack Recommendations</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="recommendation_type" value="tips">
+                                <span>Healthy Tips</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Would you use alternatives? -->
+                    <div class="form-group">
+                        <label class="form-label">Did you find alternative options helpful?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="radio" name="alternatives_helpful" value="yes">
+                                <span>✓ Yes, very helpful</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="alternatives_helpful" value="somewhat">
+                                <span>~ Somewhat helpful</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="alternatives_helpful" value="no">
+                                <span>✗ Not helpful</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            📤 Submit Feedback
+                        </button>
+                        <button type="button" class="btn btn-outline btn-lg" onclick="backToDashboard()">
+                            ← Back (No feedback)
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <h3>📊 Why Your Feedback Matters</h3>
+                <ul>
+                    <li>Helps us understand what works for you</li>
+                    <li>Improves future recommendations</li>
+                    <li>Enables personalization features</li>
+                    <li>Ensures better health outcomes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/feedback.js"></script>
+</body>
+</html>

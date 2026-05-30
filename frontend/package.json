@@ -1,0 +1,8 @@
+{
+  "name": "dietassist-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for DietAssist application",
+  "scripts": {
+    "dev": "npx --yes http-server"
+  }
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caretaker Dashboard - DietAssist</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-logo">DietAssist - Caretaker Portal</div>
+            <div class="navbar-menu">
+                <span id="caretakerInfo" style="color: #666; font-weight: 600;"></span>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </nav>
+
+        <div class="content-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Patient Access</h2>
+                    <p style="margin-top: 10px; color: #666;">Enter a patient ID to view their health information and recommendations</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <div class="form-group">
+                        <label for="patientSearch">Search Patient (by Name or Email)</label>
+                        <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px;">
+                            <input type="text" id="patientSearch" placeholder="Enter patient name or email..." autocomplete="off">
+                            <button onclick="searchPatients()" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Patient Search Results -->
+                    <div id="searchResultsContainer" style="display: none; margin-top: 15px;">
+                        <div style="background-color: #f0f8ff; border: 1px solid #b3d9ff; border-radius: 8px; padding: 15px;">
+                            <p style="margin: 0 0 10px 0; color: #0066cc; font-weight: 600;">👥 Patient Results</p>
+                            <div id="searchResultsList" style="max-height: 300px; overflow-y: auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patient Data Display -->
+                <div id="patientDataContainer" style="display: none;">
+                    <div style="border-top: 2px solid var(--border-color); padding-top: 20px;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 20px;">Patient Information</h3>
+                        
+                        <div class="card" style="background-color: var(--light-color);">
+                            <div class="patient-info">
+                                <div class="patient-info-item">
+                                    <span>Name:</span>
+                                    <strong id="patientName">-</strong>
+                                </div>
+                                <div class="patient-info-item">
+                                    <span>Age:</span>
+                                    <strong id="patientAge">-</strong>
+                                </div>
+                                <div class="patient-info-item">
+                                    <span>Email:</span>
+                                    <strong id="patientEmail">-</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Health Information -->
+                        <h3 style="color: var(--primary-color); margin: 25px 0 15px 0;">Health Profile</h3>
+                        <div id="patientHealthContainer" class="card" style="background-color: var(--light-color);"></div>
+
+                        <!-- Recommendations Section -->
+                        <h3 style="color: var(--primary-color); margin: 25px 0 15px 0;">Current & Historical Recommendations</h3>
+                        <div id="patientRecommendationsContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/caretaker-dashboard.js"></script>
+</body>
+</html>

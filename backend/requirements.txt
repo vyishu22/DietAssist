@@ -1,0 +1,30 @@
+Flask==2.3.3
+flask-cors==4.0.0
+flask-pymongo==2.3.0
+PyJWT==2.8.0
+bcrypt==4.0.1
+python-dotenv==1.0.0
+pymongo==4.4.1
+# OpenRouter uses HTTP; remove Gemini SDK packages
+# Caching
+cachetools
+# Rate limiting
+flask-limiter
+# Redis client (for production limiter storage)
+redis>=4.6.0
+# Monitoring
+sentry-sdk
+# Testing
+pytest
+pytest-mock
+# Playwright for lightweight browser E2E tests
+playwright
+pytest-playwright
+# E2E / browser tests
+selenium
+webdriver-manager
+requests
+# ML personalization
+scikit-learn
+scipy
+joblib

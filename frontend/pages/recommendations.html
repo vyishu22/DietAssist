@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Recommendations - DietAssist</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-logo">DietAssist</div>
+            <div class="navbar-menu">
+                <button onclick="goToHealth()">Edit Health Info</button>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </nav>
+
+        <div class="content-wrapper">
+            <!-- Alert Message Container -->
+            <div id="alertContainer"></div>
+
+            <div class="recommendations-container">
+                <!-- Main Recommendations Area -->
+                <div class="recommendations-main">
+                    <!-- Food Section -->
+                    <div class="recommendation-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <span>🍽️ Food Recommendations</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content section-scrollable" data-expanded="true">
+                            <div id="allergyMessages" class="allergy-message-list"></div>
+                            <div id="foodContent"></div>
+                            <!-- foods to avoid list inserted by JS -->
+                            <div id="avoidContent"></div>
+                            <div class="alternatives-section">
+                                <p class="alternatives-message">💡 Alternative food options are available.</p>
+                                <button onclick="toggleAlternatives('food')" class="btn btn-outline btn-sm">
+                                    <span id="foodAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="foodAlternatives" class="alternatives-content"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Drinks Section -->
+                    <div class="recommendation-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <span>🥤 Drink Recommendations</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content section-scrollable" data-expanded="true">
+                            <div id="drinksContent"></div>
+                            <div class="alternatives-section">
+                                <p class="alternatives-message">💡 Alternative options are available.</p>
+                                <button onclick="toggleAlternatives('drinks')" class="btn btn-outline btn-sm">
+                                    <span id="drinksAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="drinksAlternatives" class="alternatives-content"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Snacks Section -->
+                    <div class="recommendation-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <span>🍿 Snack Recommendations</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content section-scrollable" data-expanded="true">
+                            <div id="snacksContent"></div>
+                            <div class="alternatives-section">
+                                <p class="alternatives-message">💡 Alternative options are available.</p>
+                                <button onclick="toggleAlternatives('snacks')" class="btn btn-outline btn-sm">
+                                    <span id="snacksAltText">Show Alternatives</span> 🔄
+                                </button>
+                                <div id="snacksAlternatives" class="alternatives-content"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Button Section -->
+                    <div class="recommendation-section">
+                        <div class="section-content feedback-cta" data-expanded="true">
+                            <p>Have feedback? We'd love to hear from you!</p>
+                            <button onclick="goToFeedback()" class="btn btn-primary btn-lg">
+                                📝 Go to Feedback Page
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Healthy Tips Card -->
+                    <div class="sidebar-card">
+                        <h3>💡 Healthy Tips for Today</h3>
+                        <div id="tipsContent"></div>
+                    </div>
+
+                    <!-- Health Summary Card -->
+                    <div class="sidebar-card">
+                        <h3>📊 Your Health Summary</h3>
+                        <div id="healthSummary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/recommendations.js"></script>
+</body>
+</html>

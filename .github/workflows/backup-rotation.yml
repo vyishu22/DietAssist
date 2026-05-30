@@ -1,0 +1,74 @@
+name: Backup Rotation & Verification
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # daily at 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  rotate-backups:
+    runs-on: ubuntu-latest
+    env:
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      RETENTION_DAYS: ${{ secrets.BACKUP_RETENTION_DAYS || '30' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: List bucket objects
+        run: |
+          echo "Listing objects in s3://$AWS_S3_BUCKET"
+          aws s3api list-objects-v2 --bucket "$AWS_S3_BUCKET" --query 'Contents[?LastModified<`$(date -u -d "$RETENTION_DAYS days ago" +"%Y-%m-%dT%H:%M:%SZ")`].{Key: Key, LastModified: LastModified}' --output json > objects.json || true
+          cat objects.json
+
+      - name: Delete old objects
+        run: |
+          if [ -s objects.json ]; then
+            jq -r '.[].Key' objects.json | while read -r key; do
+              echo "Deleting: $key"
+              aws s3 rm "s3://$AWS_S3_BUCKET/$key"
+            done
+          else
+            echo "No objects to delete"
+          fi
+
+  verify-backups:
+    runs-on: ubuntu-latest
+    needs: rotate-backups
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Find latest backup file
+        run: |
+          aws s3api list-objects-v2 --bucket "${{ secrets.AWS_S3_BUCKET }}" --query 'sort_by(Contents,&LastModified)[-1].Key' --output text > latest_key.txt || true
+          echo "Latest key: $(cat latest_key.txt)"
+
+      - name: Download latest backup and show size
+        run: |
+          key=$(cat latest_key.txt)
+          if [ -n "$key" ] && [ "$key" != "None" ]; then
+            aws s3 cp "s3://$AWS_S3_BUCKET/$key" ./latest-backup.gz
+            echo "Downloaded latest backup: $(du -h ./latest-backup.gz)"
+            # Optional: run integrity checks (e.g., gzip -t) or attempt a mongorestore to a temp instance in CI
+            if command -v gzip >/dev/null 2>&1; then
+              gzip -t ./latest-backup.gz && echo "GZip integrity OK" || (echo "GZip integrity failed" && exit 1)
+            fi
+          else
+            echo "No backups found to verify"
+          fi

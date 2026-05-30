@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Health Information - DietAssist</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="navbar-logo">DietAssist</div>
+            <div class="navbar-menu">
+                <button onclick="goToDashboard()">Dashboard</button>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </nav>
+
+        <div class="content-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Your Health Information</h2>
+                    <p style="margin-top: 10px; color: #666;">Complete your health profile to receive personalized diet recommendations</p>
+                </div>
+
+                <form id="healthForm" class="health-form" style="display: grid; grid-template-columns: 1fr; gap: 25px;">
+                    <!-- Personal Information -->
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Personal Information</h3>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" required>
+                        </div>
+                    </div>
+
+                    <!-- Health Conditions -->
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Health Conditions</h3>
+                        <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Select and enter your health metrics. Leave empty if not applicable.</p>
+                    </div>
+
+                    <!-- Diabetes -->
+                    <div class="health-condition">
+                        <label>
+                            <input type="checkbox" id="diabetesCheck" onchange="toggleInput('diabetes')">
+                            Diabetes (Fasting Glucose)
+                        </label>
+                        <div style="margin-top: 10px;">
+                            <input type="number" id="diabetes" placeholder="Enter value in mg/dL" disabled step="0.1">
+                            <small style="display: block; margin-top: 5px; color: #999;">Normal: < 100 mg/dL</small>
+                        </div>
+                    </div>
+
+                    <!-- Blood Pressure -->
+                    <div class="health-condition">
+                        <label>
+                            <input type="checkbox" id="bloodPressureCheck" onchange="toggleInput('bloodPressure')">
+                            Blood Pressure
+                        </label>
+                        <div style="margin-top: 10px;">
+                            <input type="text" id="bloodPressure" placeholder="Enter as 120/80" disabled>
+                            <small style="display: block; margin-top: 5px; color: #999;">Normal: 120/80 mmHg</small>
+                        </div>
+                    </div>
+
+                    <!-- Cholesterol -->
+                    <div class="health-condition">
+                        <label>
+                            <input type="checkbox" id="cholesterolCheck" onchange="toggleInput('cholesterol')">
+                            Cholesterol (Total)
+                        </label>
+                        <div style="margin-top: 10px;">
+                            <input type="number" id="cholesterol" placeholder="Enter value in mg/dL" disabled step="0.1">
+                            <small style="display: block; margin-top: 5px; color: #999;">Normal: < 200 mg/dL</small>
+                        </div>
+                    </div>
+
+                    <!-- BMI (Obesity) -->
+                    <div class="health-condition">
+                        <label>
+                            <input type="checkbox" id="bmiCheck" onchange="toggleInput('bmi')">
+                            BMI (Body Mass Index)
+                        </label>
+                        <div style="margin-top: 10px;">
+                            <input type="number" id="bmi" placeholder="Enter BMI value" disabled step="0.1">
+                            <small style="display: block; margin-top: 5px; color: #999;">Normal: 18.5 - 24.9</small>
+                        </div>
+                    </div>
+
+                    <!-- Allergies -->
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Food Allergies & Intolerances</h3>
+                        <div class="tags-container" id="allergyTags"></div>
+                        <div class="tag-input-container">
+                            <input type="text" id="allergyInput" class="tag-input" placeholder="Add allergy (e.g., Peanuts, Dairy) and press Add">
+                            <button type="button" class="tag-button" onclick="addAllergy()">Add</button>
+                        </div>
+                    </div>
+
+                    <!-- Food Preference -->
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Food Preference</h3>
+                        <div style="display: flex; gap: 20px;">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="radio" name="foodPreference" value="vegetarian" required>
+                                <span>Vegetarian</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="radio" name="foodPreference" value="non-vegetarian" checked required>
+                                <span>Non-Vegetarian</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div style="grid-column: 1 / -1; display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Save & Get Recommendations</button>
+                        <button type="button" class="btn btn-outline" style="flex: 1; border-color: #ccc; color: var(--dark-color); background-color: white;" onclick="goToDashboard()">Skip for Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/health-information.js"></script>
+</body>
+</html>
